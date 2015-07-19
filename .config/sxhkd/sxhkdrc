@@ -62,4 +62,8 @@ XF86AudioLowerVolume
     amixer -q sset Master 3%-
 XF86AudioRaiseVolume
     amixer -q sset Master 3%+
+super + F6
+    xbacklight -inc 5
+super + F5
+    xbacklight -dec 5
 
