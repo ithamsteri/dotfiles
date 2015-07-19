@@ -1,14 +1,5 @@
-xrdb ~/.Xresources
-xset +fp ~/.fonts
-xset fp rehash
+#!/bin/sh
 
-setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle
+# Make sure this is before the 'exec' command or it won't be sourced.
+[ -f ~/.xprofile] && source ~/.xprofile
 
-# Hide mouse cursor
-unclutter -grab -noevents -root &
-# Start URxvt daemon for fast start terminal windows
-urxvtd &
-
-#exec openbox
-sxhkd &
-exec bspwm
