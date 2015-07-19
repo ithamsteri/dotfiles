@@ -1,0 +1,126 @@
+#!/bin/sh
+
+# Need packages:
+#  - lm_sensors - for cpu temperature
+#  - sysstat    - for cpu loading
+#  - acpi       - for information about battery
+#  - alsa-utils - for volume level
+
+FG_COLOR='#aaaaaa'
+BG_COLOR='#111111'
+HEIGHT=16
+WIDTH=1920
+X=0
+Y=0
+TEXT_ALIGNMENT="center"
+FONT='-*-terminus-*-r-*-*-*-*-*-*-*-*-*-*'
+
+ICON_COLOR="#78a4ff"
+SEP="^fg(#2a2a2a) | ^fg()"
+
+# Настройки для баров
+BAR_STYLE="-w 60 -h 11 -s o -ss 1 -sw 4 -nonl"
+BAR_FG_COLOR=$FG_COLOR
+BAR_BG_COLOR="#333333"
+
+BATTERY_CHARGING_ICON="/home/hamsteri/.config/dzen/icons/bat_full_01.xbm"
+BATTERY_DISCHARGING_ICON="/home/hamsteri/.config/dzen/icons/bat_low_01.xbm"
+BATTERY_MISSING_ICON="/home/hamsteri/.config/dzen/icons/ac_01.xbm"
+BATTERY_CRITICAL_PERCENTAGE=10
+BATTERY_CRITICAL_FG_COLOR="#220000"
+BATTERY_CRITICAL_BG_COLOR="#660000"
+
+WIRELESS_ICON="/home/hamsteri/.config/dzen/icons/wifi_01.xbm"
+VOLUME_ICON="/home/hamsteri/.config/dzen/icons/spkr_01.xbm"
+
+CLOCK_ICON="/home/hamsteri/.config/dzen/icons/clock.xbm"
+CLOCK_FORMAT="%H:%M"
+
+TOTAL_RAM_MEMORY=15944  # RAM total volume in megabytes.
+MEMORY_ICON="/home/hamsteri/.config/dzen/icons/mem.xbm"
+CPU_ICON="/home/hamsteri/.config/dzen/icons/cpu.xbm"
+CPU_TEMP_ICON="/home/hamsteri/.config/dzen/icons/temp.xbm"
+
+# FUNCTIONS
+icon() {
+    echo "^fg($ICON_COLOR)^i($1)^fg()"
+}
+
+bar() {
+    echo $1 | gdbar $BAR_STYLE -fg $BAR_FG_COLOR -bg $BAR_BG_COLOR
+}
+
+battery_icon() {
+    # My notebook not know word "Charging"... only "Unknown"... 0_o
+    if [ "$battery_status" = "Unknown" ]; then
+        icon "$BATTERY_CHARGING_ICON"
+    elif [ "$battery_status" == "Discharging" ]; then
+        icon "$BATTERY_DISCHARGING_ICON"
+    else
+        icon "$BATTERY_MISSING_ICON"
+    fi
+}
+
+battery_percentage() {
+    percentage=$(acpi -b | cut -d "," -f 2 | tr -d " %")
+    if [ -z "$percentage" ]; then
+        echo "AC"
+    elif [ $percentage -le $BATTERY_CRITICAL_PERCENTAGE ] && [ $battery_status == "Discharging" ]; then
+        echo 100 | gdbar $BAR_STYLE -fg $BATTERY_CRITICAL_FG_COLOR -bg $BATTERY_CRITICAL_BG_COLOR
+    else
+        bar "$percentage"
+    fi
+}
+
+battery() {
+    battery_status=$(acpi -b | cut -d ' ' -f 3 |tr -d ',')
+    echo $(battery_icon) $(battery_percentage)
+}
+
+wireless_quality() {
+    quality_bar=$(bar "$(cat /proc/net/wireless | grep wlp2s0 | cut -d ' ' -f 5 | tr -d '.')")
+    echo "$quality_bar"
+}
+
+volume() {
+    volume=$(amixer get Master | egrep -o "[0-9]+%" | tr -d "%")
+    echo -n "^ca(1, amixer -q set Master 5%-)^ca(3, amixer -q set Master 5%+)^ca(2, amixer -q set Master toggle)"
+    if [ -z "$(amixer get Master | grep "\[on\]")" ]; then
+        echo -n "$(echo $volume | gdbar $BAR_STYLE -bg $BAR_BG_COLOR -fg $BAR_BG_COLOR)"
+    else
+        echo -n "$(bar $volume)"
+    fi
+    echo "^ca()^ca()^ca()"
+}
+
+clock() {
+    echo "$(date +$CLOCK_FORMAT)"
+}
+
+load_ram() {
+    mem=$(free -m|awk 'NR==2 {print $3}')
+    echo "$mem MiB"
+}
+
+load_cpu() {
+    loads=($(mpstat -P ALL 1 1 | awk '/Среднее:/ && $2 ~ /[0-9]/ {print $3}'))
+    echo "${loads[0]} : ${loads[1]} : ${loads[2]} : ${loads[3]}"
+}
+
+temp_cpu() {
+    temp=($(sensors | grep Physical | cut -d ' ' -f 5 | tr -d '+C'))
+    echo "$temp"
+}
+
+# WORK LOOP
+while :; do
+    echo -n "$(icon $CPU_ICON) $(load_cpu)$SEP"
+    echo -n "$(icon $CPU_TEMP_ICON) $(temp_cpu)$SEP"
+    echo -n "$(icon $MEMORY_ICON) $(load_ram)$SEP"
+    echo -n "$(battery)$SEP"
+    echo -n "$(icon $WIRELESS_ICON) $(wireless_quality)$SEP"
+    echo -n "$(icon $VOLUME_ICON) $(volume)$SEP"
+    echo "$(icon $CLOCK_ICON) $(clock) "
+    sleep 5
+done | dzen2 -fg $FG_COLOR -bg $BG_COLOR -ta $TEXT_ALIGNMENT -w $WIDTH -h $HEIGHT -x $X -y $Y -fn $FONT
+
