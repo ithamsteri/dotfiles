@@ -18,6 +18,10 @@ super + t
 super + b
     bspc desktop -B
 
+# Rotate windows in current desktop
+super + r
+    bspc desktop -R 90
+
 super + {s,f}
     bspc window -t {floating,fullscreen}
 
@@ -62,8 +66,10 @@ XF86AudioLowerVolume
     amixer -q sset Master 3%-
 XF86AudioRaiseVolume
     amixer -q sset Master 3%+
-super + F6
-    xbacklight -inc 5
+
 super + F5
-    xbacklight -dec 5
+    xbacklight -dec 10
+
+super + F6
+    xbacklight -inc 10
 
