@@ -47,6 +47,7 @@ call vundle#begin()
     Plugin 'rust-lang/rust.vim'         " Support Rust
     Plugin 'phildawes/racer'            " For autocomplete in Rust
     Plugin 'scrooloose/syntastic'       " Check syntax
+    Plugin 'ekalinin/Dockerfile.vim'    " Support for Dockerfile
 call vundle#end()
 filetype plugin indent on " Enable filetype for Vundle
 
@@ -79,6 +80,29 @@ inoremap <expr><C-y>  neocomplete#close_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
 
 " -----------------------------------------------
+" NeoSnippet Plugin
+" -----------------------------------------------
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+" -----------------------------------------------
 
 " Tagbar Plugin
 nmap <F8> :TagbarToggle<CR>
@@ -90,14 +114,6 @@ map <C-n> :NERDTreeToggle<CR>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-"imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: pumvisible() ? "\<C-n>" : "\<TAB>"
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-"\ "\<Plug>(neosnippet_expand_or_jump)"
-"\: "\<TAB>"
 
 " -----------------------------------------------
 " Syntastics Plugin
