@@ -9,6 +9,9 @@ PROMPT="
 # Right promt
 RPROMPT="%B%{$fg[black]%}%~%{$reset_color%}%b"
 
+# Disable beeping (I hate this hell sound!)
+setopt NO_BEEP
+
 setopt AUTO_CD
 setopt CORRECT
 
