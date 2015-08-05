@@ -7,7 +7,7 @@ colors
 PROMPT="
 %{$fg[red]%} >  %{$reset_color%}"
 # Right promt
-RPROMPT="%B%{$fg[black]%}%~%{$reset_color%}"
+RPROMPT="%B%{$fg[black]%}%~%{$reset_color%}%b"
 
 setopt AUTO_CD
 setopt CORRECT
@@ -21,6 +21,9 @@ export EDITOR="vim"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin
 alias vgo='vim -u ~/.vimrc.go'
+
+# Rust plugin for VIM need this path to Racer utility
+export RUST_SRC_PATH=$HOME/projects/rust/src
 
 # Sudo alias
 alias svim='sudoedit'
