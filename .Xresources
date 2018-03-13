@@ -1,34 +1,41 @@
-#include "/home/hamsteri/.colors/vimbrant"
-!#include "/home/hamsteri/.colors/base16-railscasts.dark"
+#include "/home/hamsteri/.config/colors/google.dark"
 
-!URxvt*fading: 10
-URxvt*cursorBlink:    true
-URxvt*scrollBar:      false
-URxvt*depth:          32
-URxvt*internalBorder: 5
-URxvt*dynamicColors:  on
-URxvt*urgentOnBell:   true
+! Basic settings
+URxvt*geometry:             120x60
+URxvt*cursorBlink:          false
+URxvt*depth:                32
 
-URxvt.iso14755:    false
-URxvt.iso14755_52: false
+! Disable beep in urxvt
+URxvt.urgentOnBell:         false
+URxvt.visualBell:           true
 
-URxvt.perl-ext-common:      default,clipboard,url-select,keyboard-select,font-size
-URxvt.url-select.launcher:  firefox
-URxvt.url-select.underline: true
-URxvt.keysym.M-u:           perl:url-select:select_next
-URxvt.keysym.M-Escape:      perl:keyboard-select:activate
-URxvt.keysym.M-s:           perl:keyboard-select:search
-URxvt.keysym.C-equal:       perl:font-size:increase
-URxvt.keysym.C-minus:       perl:font-size:decrease
+! Font settings
+Xft.antialias:              1
+Xft.autohint:               0
+Xft.dpi:                    96
+Xft.hinting:                1
+Xft.hintsyle:               hintfull
+Xft.lcdfilter:              lcddefault
+Xft.rgba:                   rgb
 
-URxvt*font: xft:Fira Mono for Powerline:size=9
-URxvt.letterSpace: -2
+! UI settings
+URxvt*font:                 xft:droid sansmono:size=10
+URxvt*underlineColor:       darkred
 
-Xft.antialias: 1
-Xft.autohint: 0
-Xft.dpi: 96
-Xft.hinting: 1
-Xft.hintstyle: hintfull
-Xft.lcdfilter: lcddefault
-Xft.rgba: rgb
+! UI
+URxvt*fading:               30              ! % brightness reduction on focus loss
+URxvt*mapAlert:             true            ! de-iconify on bell alert
+URxvt*scrollBar:            false           ! maximize usable line width
+URxvt*shading:              40              ! darken background transparency 60%
+URxvt*transparent:          true
+URxvt*visualBell:           true            ! blink window on bell
 
+! Scrolling
+URxvt*scrollTtyKeypress:    true            ! scroll to bottom on keypress
+URxvt*scrollTtyOutput:      false           ! do not scroll to bottom on output
+URxvt*scrollWithBuffer:     false           ! do not use scrollback buffer
+URxvt*skipScroll:           true            ! favour scroll speed over listing all lines
+
+! Settings for perl plugins
+URxvt*perl-ext:
+URxvt*perl-ext-common:
