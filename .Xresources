@@ -19,7 +19,7 @@ Xft.lcdfilter:              lcddefault
 Xft.rgba:                   rgb
 
 ! UI settings
-URxvt*font:                 xft:droid sansmono:size=10
+URxvt*font:                 xft:Droid Sans Mono for Powerline:size=11
 URxvt*underlineColor:       darkred
 
 ! UI
@@ -37,5 +37,7 @@ URxvt*scrollWithBuffer:     false           ! do not use scrollback buffer
 URxvt*skipScroll:           true            ! favour scroll speed over listing all lines
 
 ! Settings for perl plugins
-URxvt*perl-ext:
-URxvt*perl-ext-common:
+!URxvt*perl-ext:
+URxvt*perl-ext-common: default,fullscreen
+
+URxvt*keysym.F11: perl:fullscreen:switch
